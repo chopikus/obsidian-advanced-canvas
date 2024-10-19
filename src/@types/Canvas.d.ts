@@ -247,6 +247,7 @@ export interface CanvasEdgeData {
 
   fromSide: Side
   toSide: Side
+  autoSide?: boolean
   
   fromEnd?: EndType
   toEnd?: EndType

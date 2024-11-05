@@ -5,6 +5,8 @@ import { CanvasEvent } from "./events"
 import { requireApiVersion, WorkspaceLeaf } from "obsidian"
 import { around } from "monkey-around"
 import JSONC from "tiny-jsonc"
+// @ts-ignore
+import stringify from "json-stable-stringify"
 
 export default class CanvasPatcher {
   plugin: AdvancedCanvasPlugin
@@ -51,7 +53,7 @@ export default class CanvasPatcher {
         const canvasData = this.canvas.getData()
         canvasData.metadata = this.canvas.metadata ?? {}
 
-        return JSON.stringify(canvasData, null, 2)
+        return stringify(canvasData, { space: 2 })
       },
       setViewData: (next: any) => function (json: string, ...args: any) {
         let validJson = json !== '' ? json : '{}'

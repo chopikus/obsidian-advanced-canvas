@@ -1,0 +1,12 @@
+/* Control Menu */
+.canvas-wrapper:not(.mod-readonly) .show-while-readonly {
+  display: none;
+}
+
+.canvas-control-item[data-toggled="true"] {
+  background-color: var(--color-accent);
+
+  svg {
+    stroke: var(--text-on-accent);
+  }
+}

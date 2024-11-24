@@ -1,5 +1,5 @@
 import { setIcon } from "obsidian"
-import { BBox, Canvas, CanvasData, CanvasNode, CanvasNodeData, SelectionData } from "src/@types/Canvas"
+import { BBox, Canvas, CanvasData, CanvasNode, CanvasNodeData, Position, SelectionData } from "src/@types/Canvas"
 import { CanvasEvent } from "src/core/events"
 import BBoxHelper from "src/utils/bbox-helper"
 import CanvasExtension from "../core/canvas-extension"
@@ -11,17 +11,7 @@ export default class RemarkableExtension extends CanvasExtension {
   init() {
     this.plugin.registerEvent(this.plugin.app.workspace.on(
       CanvasEvent.CanvasChanged,
-      (canvas: Canvas) => {
-        for (let node of canvas.nodes.values()) {
-          const styleAttributes = node.getData().styleAttributes;
-          if (!styleAttributes)
-            continue;
-          const orientation = styleAttributes["remarkable_screen"];
-          if ((orientation !== "landscape") && (orientation !== "portrait"))
-            continue;
-          this.addRemarkableScreen(node, orientation);
-        }
-      }
+      (canvas: Canvas) => this.onCanvasChanged(canvas)
     ))
 
     this.plugin.addCommand({
@@ -48,6 +38,32 @@ export default class RemarkableExtension extends CanvasExtension {
       CanvasEvent.NodeMoved,
       (canvas: Canvas, node: CanvasNode) => this.onNodeMoved(canvas, node)
     ))
+  }
+
+  private onCanvasChanged(canvas: Canvas) {
+    CanvasHelper.addCardMenuOption(
+      canvas,
+      CanvasHelper.createCardMenuOption(
+        canvas,
+        {
+          id: 'insert-remarkable-screen-landscape',
+          label: 'Insert rM screen (Landscape)',
+          icon: 'airplay'
+        },
+        () => {return {width: 100, height: 100};},
+        (canvas: Canvas, pos: Position) => this.createGroupNode(canvas, "landscape")
+      )
+    )
+
+    for (let node of canvas.nodes.values()) {
+      const styleAttributes = node.getData().styleAttributes;
+      if (!styleAttributes)
+        continue;
+      const orientation = styleAttributes["remarkable_screen"];
+      if ((orientation !== "landscape") && (orientation !== "portrait"))
+        continue;
+      this.addRemarkableScreen(node, orientation);
+    }
   }
 
   private createGroupNode(canvas: Canvas, orientation: string) {
@@ -91,7 +107,18 @@ export default class RemarkableExtension extends CanvasExtension {
 
   private onNodeMoved(_canvas: Canvas, node: CanvasNode) {
     const nodeData = node.getData()
-    if (!nodeData.sideRatio) return
+    if (!nodeData.styleAttributes)
+      return;
+
+    const orientation = nodeData.styleAttributes["remarkable_screen"];
+    let screenRatio = 0.0;
+    if (orientation === "landscape") {
+      screenRatio = 1872/1404; 
+    } else if (orientation === "portrait") {
+      screenRatio = 1404/1872;
+    } else {
+      return;
+    }
 
     const nodeBBox = node.getBBox()
     const nodeSize = {
@@ -100,9 +127,9 @@ export default class RemarkableExtension extends CanvasExtension {
     }
     const nodeAspectRatio = nodeSize.width / nodeSize.height
 
-    if (nodeAspectRatio < nodeData.sideRatio)
-      nodeSize.width = nodeSize.height * nodeData.sideRatio
-    else nodeSize.height = nodeSize.width / nodeData.sideRatio
+    if (nodeAspectRatio < screenRatio)
+      nodeSize.width = nodeSize.height * screenRatio
+    else nodeSize.height = nodeSize.width / screenRatio
 
     node.setData({
       ...nodeData,

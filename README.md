@@ -9,4 +9,4 @@ This fork adds a screen sharing feature from a reMarkable tablet. It is a proof 
 So far there are 3 ways to insert a ReMarkable screen available:
 * _Insert ReMarkable screen (Portrait)_ command.
 * _Insert ReMarkable screen (Landscape)_ command.
-* _Insert rM screen (Landscape) button in the card layout.
+* _Insert rM screen (Landscape)_ button in the card layout.

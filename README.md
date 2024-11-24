@@ -1,5 +1,7 @@
 This fork adds a screen sharing feature for a reMarkable tablet. Specifically, it embeds a page from [goMarkableStream](https://github.com/owulveryck/goMarkableStream) by injecting an iframe into the group node.
 
+https://github.com/user-attachments/assets/da263baf-f95a-4170-ac6c-43ce3c783cee
+
 ## Installation
 1. Set up [goMarkableStream](https://github.com/owulveryck/goMarkableStream) on your reMarkable tablet. Make sure you run goMarkableStream with environment variable `RK_HTTPS=false` and with `-unsafe` argument. Example: `RK_HTTPS=false ./goMarkableStream -unsafe`.
 2. Add this plugin via [BRAT](https://github.com/TfTHacker/obsidian42-brat) or directly.

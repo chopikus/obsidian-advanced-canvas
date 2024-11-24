@@ -72,8 +72,8 @@ export interface AdvancedCanvasPluginSettings {
   maintainClosedPortalSize: boolean
   showEdgesIntoDisabledPortals: boolean,
 
-  //my plugin
-  myExtensionEnabled: boolean
+  remarkableExtensionEnabled: boolean,
+  goMarkableStreamUrl: string,
 }
 
 export const DEFAULT_SETTINGS: Partial<AdvancedCanvasPluginSettings> = {
@@ -134,7 +134,8 @@ export const DEFAULT_SETTINGS: Partial<AdvancedCanvasPluginSettings> = {
 
   portalsFeatureEnabled: true,
   maintainClosedPortalSize: true,
-  showEdgesIntoDisabledPortals: true
+  showEdgesIntoDisabledPortals: true,
+  goMarkableStreamUrl: "http://10.11.99.1:2001",
 }
 
 export default class SettingsManager {
@@ -184,6 +185,22 @@ export class AdvancedCanvasPluginSettingTab extends PluginSettingTab {
   display(): void {
     let { containerEl } = this
     containerEl.empty()
+
+    this.createFeatureHeading(
+      containerEl,
+      "ReMarkable Screen Sharing",
+      "Enable inserting the screen of a ReMarkable tablet.",
+      'remarkableExtensionEnabled'
+    )
+
+    new Setting(containerEl)
+      .setName("ReMarkable Screen Sharing: goMarkableStream URL")
+      .setDesc("For example: http://10.11.99.1:2001")
+      .addText((text) =>
+        text
+          .setValue(this.settingsManager.getSetting('goMarkableStreamUrl'))
+          .onChange(async (value) => await this.settingsManager.setSetting({ goMarkableStreamUrl: value }))
+    )
 
     new Setting(containerEl)
       .setHeading()
@@ -416,14 +433,6 @@ export class AdvancedCanvasPluginSettingTab extends PluginSettingTab {
       "Collapsible groups",
       "Group nodes can be collapsed and expanded to keep the canvas organized.",
       'collapsibleGroupsFeatureEnabled'
-    )
-
-    // my extension
-    this.createFeatureHeading(
-      containerEl,
-      "My extension",
-      "My extensionMy extensionMy extensionMy extension.",
-      'myExtensionEnabled'
     )
 
     new Setting(containerEl)

@@ -35,7 +35,7 @@ import NodeExposerExtension from './canvas-extensions/dataset-exposers/node-expo
 import EdgeExposerExtension from './canvas-extensions/dataset-exposers/edge-exposer'
 import CanvasWrapperExposerExtension from './canvas-extensions/dataset-exposers/canvas-wrapper-exposer'
 import MigrationHelper from './utils/migration-helper'
-import MyExtension from './canvas-extensions/my-extension'
+import RemarkableExtension from './canvas-extensions/remarkable-extension'
 
 const CANVAS_EXTENSIONS: typeof CanvasExtension[] = [
   // Dataset Exposers
@@ -63,7 +63,7 @@ const CANVAS_EXTENSIONS: typeof CanvasExtension[] = [
   ColorPaletteCanvasExtension,
   PresentationCanvasExtension,
   PortalsCanvasExtension,
-  MyExtension // my extension
+  RemarkableExtension
 ]
 
 export default class AdvancedCanvasPlugin extends Plugin {
